@@ -104,13 +104,13 @@ admin.conf                 May 05, 2022 18:37 UTC   364d                        
 
 **Regen the kube config**
 
-`K8S_IP=$(kubectl config view -o jsonpath={.clusters[0].cluster.server} | cut -d/ -f3 | cut -d: -f1)`
-`echo $K8S_IP`
-`kubeadm init phase certs all --apiserver-advertise-address $K8S_IP`
-`cp /etc/kubernetes/admin.conf ~/.kube/config`
+`K8S_IP=$(kubectl config view -o jsonpath={.clusters[0].cluster.server} | cut -d/ -f3 | cut -d: -f1)
+echo $K8S_IP
+kubeadm init phase certs all --apiserver-advertise-address $K8S_IP
+cp /etc/kubernetes/admin.conf ~/.kube/config`
 
 
 
-`$ kubectl get nodes`
-`NAME           STATUS   ROLES    AGE    VERSION`
-`rasp-node-01   Ready    master   416d   v1.18.0`
+`$ kubectl get nodes
+NAME           STATUS   ROLES    AGE    VERSION
+rasp-node-01   Ready    master   416d   v1.18.0`
