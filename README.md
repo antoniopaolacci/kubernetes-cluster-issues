@@ -24,14 +24,14 @@ The connection to the server 192.168.1.65:6443 was refused - did you specify the
 You must inspect error on:
 
 ```
-sudo systemctl status kubelet.service
+~ $ sudo systemctl status kubelet.service
 ```
 
 ![]()
 
 
 ```
-$ curl https://192.168.1.65:6443/api/v1/nodes
+~ $ curl https://192.168.1.65:6443/api/v1/nodes
 curl: (35) OpenSSL SSL_connect: SSL_ERROR_SYSCALL in connection to 192.168.1.65:6443
 ```
 
@@ -43,7 +43,7 @@ After a few restart my kubelet and apiserver, no luck, I realize my kubernetes a
 Apparently port 2379 is belongs to etcd , and its mentioned the cert has expired! Checking the certificate information, indeed etcd components certificates has expired.
 
 ```
-$ sudo kubeadm alpha certs check-expiration
+~ $ sudo kubeadm alpha certs check-expiration
 [check-expiration] Reading configuration from the cluster...
 [check-expiration] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -oyaml'
 [check-expiration] Error reading configuration from the Cluster. Falling back to default configuration
@@ -73,7 +73,7 @@ front-proxy-ca          Mar 13, 2030 18:02 UTC   8y              no
 To renew the cert manually, I will then need to run the command “kubeadm alpha certs renew <CERTIFICATE>”
 
 ```
-$ sudo kubeadm alpha certs renew apiserver-etcd-client
+~ $ sudo kubeadm alpha certs renew apiserver-etcd-client
 [renew] Reading configuration from the cluster...
 [renew] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -oyaml'
 [renew] Error reading configuration from the Cluster. Falling back to default configuration
@@ -86,7 +86,7 @@ certificate the apiserver uses to access etcd renewed
 When all certs has been renewed and the kubernetes cluster will come back online
 
  ```
- $ sudo kubeadm alpha certs check-expiration
+~ $ sudo kubeadm alpha certs check-expiration
 [check-expiration] Reading configuration from the cluster...
 [check-expiration] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -oyaml'
 
@@ -112,14 +112,14 @@ front-proxy-ca          Mar 13, 2030 18:02 UTC   8y              no
 **Regen the kube config**
 
 ```
-K8S_IP=$(kubectl config view -o jsonpath={.clusters[0].cluster.server} | cut -d/ -f3 | cut -d: -f1)
+~ $ K8S_IP=$(kubectl config view -o jsonpath={.clusters[0].cluster.server} | cut -d/ -f3 | cut -d: -f1)
 echo $K8S_IP
 kubeadm init phase certs all --apiserver-advertise-address $K8S_IP
 cp /etc/kubernetes/admin.conf ~/.kube/config`
 ```
 
 ```
-$ kubectl get nodes
+~ $ kubectl get nodes
 NAME           STATUS   ROLES    AGE    VERSION
 rasp-node-01   Ready    master   416d   v1.18.0
 ```
